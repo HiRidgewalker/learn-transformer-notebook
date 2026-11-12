@@ -1,0 +1,9 @@
+interface:
+  display_name: "git-commit-message"
+  short_description: "读取当前 Git 改动并生成规范的中文提交信息"
+policy:
+  allow_implicit_invocation: false
+  products:
+    - "chatgpt"
+    - "codex"
+    - "api"

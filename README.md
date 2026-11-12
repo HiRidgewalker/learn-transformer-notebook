@@ -4,32 +4,34 @@
 
 参考学习项目：[HiRidgewalker/learn-transformer-notebook](https://github.com/HiRidgewalker/learn-transformer-notebook)。本项目为重新组织的独立教学网站，使用独立的简化演算示例；不是原仓库的直接复制，固定示例不等同于训练后的模型参数。
 
-## 直接运行（无需安装依赖）
+## 直接运行
 
-交付包已包含编译后的静态网站。进入项目目录后，使用：
+先完成一次生产构建，再打开静态站点：
 
 ```bash
+npm install
+npm run build
 node scripts/serve.mjs
 ```
 
-在浏览器打开 **http://127.0.0.1:4173**。如果不使用 Node.js，也可执行：
+在浏览器打开 **http://127.0.0.1:4173**。如果不使用 Node.js 提供预览，也可在已有 `dist/` 时执行：
 
 ```bash
 python3 -m http.server 4173 --directory dist
 ```
 
-> `dist/` 内已包含 HTML、CSS、编译后的 React 应用 JavaScript、公式渲染脚本及运行时脚本。无需外部 CDN、账号或模型 API。请通过本地 HTTP 服务打开，不要依赖双击 HTML 文件。
+> `dist/` 包含 HTML、CSS、打包后的 JavaScript、本地字体和 MathJax。页面不请求外部 CDN、账号或模型 API。请通过本地 HTTP 服务打开，不要依赖双击 HTML 文件。
 
 ## 开发 / 修改源码
 
-推荐 Node.js 20+。项目使用 **React + TypeScript + Vite**：
+推荐 Node.js 20+。项目使用 **React + TypeScript + Vite + Tailwind CSS**：
 
 ```bash
 npm install
 npm run dev
 ```
 
-默认打开 http://localhost:5173 。开发模式会同时启动 TypeScript watch 与 Vite。修改 `src/app.tsx` 或 `src/data.ts` 后，TypeScript 自动重新编译到 `public/app.js`，Vite 会重新加载页面。
+默认打开 http://localhost:5173 。界面组件来自 shadcn 使用的 Radix 基础组件，图表使用 ECharts，架构和注意力连线使用 React Flow，章节正文是 MDX，公式由本地 MathJax 渲染。
 
 生产构建：
 
@@ -37,10 +39,6 @@ npm run dev
 npm run build
 npm run preview
 ```
-
-也可以使用 `npm run build:vite` 生成 Vite 构建版本。
-
-> 为了让交付的静态版本无需 npm 下载即可运行，React 运行时作为独立 JavaScript 文件随项目打包；源码是 TypeScript/TSX，使用 React 类组件来管理交互状态。依赖版本和声明在 `package.json` / `public/vendor/NOTICE.txt` 中。
 
 ## 课程与交互
 
@@ -67,19 +65,20 @@ npm run preview
 
 ```text
 transformer-visual-academy/
-├── index.html              # 开发入口
+├── index.html
 ├── src/
-│   ├── data.ts             # 14 章课程、公式、步骤与例子
-│   └── app.tsx             # React 页面、导航、可视化实验
+│   ├── app.tsx                 # 导航、主题与路由
+│   ├── core.ts                 # 教学数值
+│   ├── app/globals.css         # Tailwind 与字体
+│   ├── components/             # shadcn 组件、图表与流程图
+│   ├── content/lessons/        # 14 章 MDX
+│   └── labs/                   # 各章交互实验
 ├── public/
-│   ├── styles.css          # 全站响应式设计与动画
-│   ├── app.js              # TSX 编译产物
-│   └── vendor/             # 离线运行时与 SVG 公式渲染脚本
-├── dist/                   # 可直接部署的静态网站
-├── scripts/
-│   ├── build.mjs           # 将编译后的文件整理到 dist
-│   └── serve.mjs           # 零依赖本地预览服务器
-├── tests/core.test.cjs     # 核心计算与章节检查
+│   ├── fonts/                  # Google Sans 与 Noto Sans SC
+│   └── vendor/mathjax/         # 本地 MathJax
+├── dist/                       # 生产构建结果
+├── scripts/serve.mjs           # 静态预览服务器
+├── tests/core.test.ts
 ├── tsconfig.json
 ├── vite.config.ts
 └── package.json
@@ -93,7 +92,7 @@ npm test
 npm run build
 ```
 
-在交付环境中已通过 TypeScript 编译和 9 项 Node 数值/内容与页面组件检查。静态网站资源路径通过本地 HTTP 请求检查。由于环境浏览器实施了全局 URL 封锁策略，没有完成浏览器交互自动化和视觉快照验证；因此建议首次在本地运行后检查浏览器控制台。不要将数字演示误认为真实训练的权重或翻译精度。
+数值测试覆盖 softmax、注意力、位置编码、FFN 和 14 章 MDX。不要将数字演示误认为真实训练的权重或翻译精度。
 
 ## 核心数学约定
 
@@ -106,4 +105,4 @@ npm run build
 
 ## 许可与归属
 
-教学内容与业务源码可自行修改和使用。随包提供的 React、ReactDOM 与 MathJax 脚本分别受其原始许可约束，详见 `public/vendor/NOTICE.txt`。
+教学内容与业务源码可自行修改和使用。MathJax 脚本受其原始许可约束，详见 `public/vendor/NOTICE.txt`。React 随构建打包，遵循其原始许可。

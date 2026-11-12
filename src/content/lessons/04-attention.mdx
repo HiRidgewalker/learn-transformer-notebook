@@ -1,0 +1,31 @@
+---
+id: "attention"
+no: "04"
+eyebrow: "注意力核心"
+title: "注意力到底在哪里发生"
+en: "Scaled Dot-Product Attention"
+summary: "Attention 先为 Token 构造 Q、K、V，再用 Q·K 给匹配打分，经 Softmax 变成权重，最后按权重汇聚 V。"
+duration: "14 min"
+input: "一个 Q + 三个 K/V"
+output: "一个新的上下文向量"
+---
+
+<Question>一个 Token 如何决定自己应该关注哪些位置？</Question>
+<Formula tex={String.raw`\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V`} />
+<Io />
+<Steps>
+<Step title={"投影得到 Q、K、V"} example={"Q=XW_Q；K=XW_K；V=XW_V"}>
+同一层的各个 Token 共用 W_Q、W_K、W_V，但因为输入不同，得到的 Q、K、V 通常不同。权重矩阵是训练出来的。
+</Step>
+<Step title={"点积打分并缩放"} example={"q=[1,0]，K=[[1,0],[0,1],[1,1]] → [1,0,1]/√2"}>
+当前 Q 与每个 K 对应元素相乘再求和；因为本例 d_k=2，所以所有分数都除以 √2。
+</Step>
+<Step title={"Softmax 变成权重"} example={"[0.7071,0,0.7071] → [0.4011,0.1978,0.4011]"}>
+指数化并归一化，让三项权重都非负且总和为 1。权重大通常表示当前 Q 对该 K 的匹配更强。
+</Step>
+<Step title={"按照权重汇聚 V"} example={"0.4011[1,0]+0.1978[0,2]+0.4011[3,1] ≈ [1.6044,0.7967]"}>
+每个 V 乘对应权重，再逐维相加。最终得到当前 Query 的新表示。
+</Step>
+</Steps>
+<LabSection id={"attention"} />
+<Takeaway insight={"Attention 是动态分配权重并汇聚信息的一整套过程。Softmax 的输出是“注意力权重”最直接的数值体现。"} caution={"点积评分受向量长度与方向共同影响；“权重大”不意味着对应 Token 在人类语言学意义上必然更重要。"} />

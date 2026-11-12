@@ -1,0 +1,31 @@
+---
+id: "embedding"
+no: "02"
+eyebrow: "输入基础"
+title: "Token ID 如何找到向量"
+en: "Token Embedding"
+summary: "Embedding 是一张可学习的二维参数表。Token ID 直接充当行索引，取出对应的向量；向量数值通常在模型训练时共同学习。"
+duration: "7 min"
+input: "Token ID = 25"
+output: "[0.5,0.1,0.2,0.3]"
+---
+
+<Question>为什么一个整数 ID 就能对应一组小数？</Question>
+<Formula tex={String.raw`E\in\mathbb R^{V\times d_{model}},\qquad x_i=E[id_i]`} />
+<Io />
+<Steps>
+<Step title={"确定矩阵大小"} example={"每行属于一个 Token ID；每列属于一个向量特征。"}>
+假设词表有 V=10000 个 Token，每个向量有 d_model=4 维，就需要一张 10000×4 的 Embedding 表。
+</Step>
+<Step title={"用 ID 直接索引"} example={"E[25] → [0.5,0.1,0.2,0.3]"}>
+读取 E[25]，就会得到第 25 行的四个数。没有“按相似度搜索词向量”这一步。
+</Step>
+<Step title={"初始化不是语义学习"} example={"创建 nn.Embedding(...) 是创建可训练参数，不是加载词典释义。"}>
+刚创建模型时这些参数通常随机初始化。参数训练之前，这些数字一般没有可靠的语义意义。
+</Step>
+<Step title={"跟模型其他参数一起更新"} example={"梯度 → 优化器 → E 的数值逐渐更新"}>
+Loss 通过反向传播传给 Embedding 表，优化器更新相关行；Attention 与 FFN 参数也可以同步训练。
+</Step>
+</Steps>
+<LabSection id={"embedding"} />
+<Takeaway insight={"同一个 Token ID 查同一张表，初始 Embedding 相同；加入位置和上下文后，不同位置的隐藏状态可以不同。"} caution={"词表 ID 的大小不代表语义大小；Token 25 并不比 Token 10“更重要”。"} />

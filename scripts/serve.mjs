@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 const dir=path.resolve('dist');
 const port=Number(process.env.PORT||4173);
-const types={'.js':'text/javascript;charset=utf-8','.css':'text/css;charset=utf-8','.html':'text/html;charset=utf-8','.svg':'image/svg+xml'};
+const types={'.js':'text/javascript;charset=utf-8','.css':'text/css;charset=utf-8','.html':'text/html;charset=utf-8','.svg':'image/svg+xml','.ttf':'font/ttf'};
 http.createServer((req,res)=>{
   let u;try{u=decodeURIComponent((req.url||'/').split('?')[0]);}catch{res.writeHead(400).end();return;}
   if(u==='/')u='/index.html';

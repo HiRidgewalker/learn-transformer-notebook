@@ -1,0 +1,31 @@
+---
+id: "overview"
+no: "00"
+eyebrow: "学习地图"
+title: "一眼看懂 Transformer"
+en: "The Big Picture"
+summary: "把文本变成可计算的向量，让词与词交换信息，再一步一步预测输出。先看清整条路线，再钻进每个公式。"
+duration: "8 min"
+input: "源文本 / 目标前缀"
+output: "下一个 Token 的概率"
+---
+
+<Question>经典 Transformer 的每个模块分别干什么？</Question>
+<Formula tex={String.raw`\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V`} />
+<Io />
+<Steps>
+<Step title={"输入先变成数字"} example={"「我 爱 你」→ [4,5,6] → 三行向量"}>
+Tokenizer 先把文字切成 Token，再映射到 Token ID；Embedding 表按 ID 找到向量；位置编码补充顺序信息。
+</Step>
+<Step title={"Encoder 读懂源句"} example={"得到 H_enc，每行代表一个源位置的上下文信息"}>
+Self-Attention 允许每个源 Token 关注所有有效源位置。FFN 再逐位置加工表示，残差与归一化帮助稳定信息传递。
+</Step>
+<Step title={"Decoder 逐步准备输出"} example={"<bos> → 预测 I → 输入 <bos> I → 预测 love"}>
+Masked Self-Attention 只看当前及之前的目标位置；Cross-Attention 再用目标侧 Q 查询源句的 K、V。
+</Step>
+<Step title={"投影、训练或生成"} example={"Logits → Softmax → Token 预测"}>
+输出层把隐藏向量变成词表 Logits。训练时计算 Loss 并反向传播；推理时选择一个 Token 追加到前缀。
+</Step>
+</Steps>
+<LabSection id={"overview"} />
+<Takeaway insight={"经典 Transformer 是 Encoder–Decoder 架构。Attention、FFN、Add & Norm 在其中协同工作，而不是彼此替代。"} caution={"这个教程使用小型教学数值展示算法，不是实际训练好的翻译模型。"} />

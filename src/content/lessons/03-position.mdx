@@ -1,0 +1,31 @@
+---
+id: "position"
+no: "03"
+eyebrow: "输入基础"
+title: "数字怎样记住先后顺序"
+en: "Sinusoidal Positional Encoding"
+summary: "Self-Attention 本身没有固定的序列次序概念。原始 Transformer 通过不同频率的正弦和余弦，为每个位置生成位置向量。"
+duration: "10 min"
+input: "位置 pos = 1，维度 d = 4"
+output: "[0.8415,0.5403,0.0100,0.99995]"
+---
+
+<Question>为什么位置 0 与位置 1 得到的向量不一样？</Question>
+<Formula tex={String.raw`PE_{pos,2i}=\sin\left(\frac{pos}{10000^{2i/d}}\right),\quad PE_{pos,2i+1}=\cos\left(\frac{pos}{10000^{2i/d}}\right)`} />
+<Io />
+<Steps>
+<Step title={"每两个维度是一组"} example={"d=4 时，分母分别是 1 和 100。"}>
+第 0、1 维共用 i=0 的频率：一个用 sin，一个用 cos。第 2、3 维共用 i=1 的频率。
+</Step>
+<Step title={"代入具体位置"} example={"PE(1) ≈ [0.8415,0.5403,0.0100,0.99995]"}>
+当 pos=1 时，前两维是 sin(1)、cos(1)；后两维是 sin(0.01)、cos(0.01)。
+</Step>
+<Step title={"与 Embedding 逐维相加"} example={"X_pos = √d_model·E[id] + PE(pos)"}>
+原始论文中的一类实现先把 Embedding 乘以 √d_model，再加上同维度的位置编码。
+</Step>
+<Step title={"不同频率编码不同尺度"} example={"位置变化 1 时，sin(pos) 与 sin(pos/100) 的变化速度不同。"}>
+前面的维度变化快，后面的维度变化慢，组合起来帮助区分位置并学习相对位置信息。
+</Step>
+</Steps>
+<LabSection id={"position"} />
+<Takeaway insight={"位置编码没有增加 Token 数量，也没有把四维向量拼接为八维；它逐元素加入原本的输入表示。"} caution={"这是原始 Transformer 的经典绝对位置编码；现代模型还常用 RoPE 等其他方案。"} />

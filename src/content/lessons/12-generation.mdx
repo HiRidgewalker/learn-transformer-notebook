@@ -1,0 +1,31 @@
+---
+id: "generation"
+no: "12"
+eyebrow: "从预测到学习"
+title: "Generation：一个 Token 接着一个"
+en: "Autoregressive Inference"
+summary: "生成时 Encoder 先处理一次源句；Decoder 每轮读取当前前缀，只使用最后一个目标位置的概率选择下一个 Token，再追加，直到遇到停止条件。"
+duration: "11 min"
+input: "源句 + <bos>"
+output: "I love you <eos>（理想演示）"
+---
+
+<Question>为什么生成整句话必须循环很多轮？</Question>
+<Formula tex={String.raw`y_t=\arg\max_v P(v\mid y_{<t},x),\qquad prefix\leftarrow[prefix,y_t]`} />
+<Io />
+<Steps>
+<Step title={"Encoder 先编码源句一次"} example={"prefix=[2]"}>
+输入源句在这次翻译中不变，因此 H_enc 可以复用。Decoder 的目标前缀初始化为 [{'<bos>'}]。
+</Step>
+<Step title={"读取最后一行概率"} example={"<bos> I → 读取第 1 行概率预测 love"}>
+如果当前前缀有 t 个 Token，Decoder 输出 t 行隐藏向量和 t 行词表概率。只有最后一行用于预测下一个位置。
+</Step>
+<Step title={"选出 Token 并追加"} example={"[<bos>] → [<bos>, I] → [<bos>, I, love]"}>
+Greedy Decoding 选择概率最大的 Token（argmax），将新 ID 加入 prefix，再进入下一轮。
+</Step>
+<Step title={"满足停止条件"} example={"<bos> I love you <eos> → 结束"}>
+生成 {'<eos>'} 或达到预设最大长度就停止。生产模型可使用 KV Cache 优化反复计算，这里用完整前缀解释算法。
+</Step>
+</Steps>
+<LabSection id={"generation"} />
+<Takeaway insight={"训练可以并行预测已知目标序列的位置；生成时未来 Token 未知，需要一步步决定。"} caution={"理想输出仅用于说明流程。固定示例概率不能代表实际训练好的语言模型。"} />

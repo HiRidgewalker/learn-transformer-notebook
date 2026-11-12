@@ -1,0 +1,31 @@
+---
+id: "tokenizer"
+no: "01"
+eyebrow: "输入基础"
+title: "从文字到 Token ID"
+en: "Tokenizer & Vocabulary"
+summary: "Tokenizer 是 Transformer 前面的独立处理组件；它把文本变成离散的 Token，再根据固定词表映射为整数 ID。"
+duration: "7 min"
+input: "我喜欢编程"
+output: "[10,25,38]"
+---
+
+<Question>一段话如何变成模型能够读取的编号？</Question>
+<Formula tex={String.raw`\text{Text}\longrightarrow[t_1,\ldots,t_n]\longrightarrow[id_1,\ldots,id_n]`} />
+<Io />
+<Steps>
+<Step title={"先有一份词表"} example={"教学词表：我→10，喜欢→25，编程→38"}>
+词表通常在预训练前，用 BPE、WordPiece 等算法从大量文本中构建。ID 是词表中的稳定索引。
+</Step>
+<Step title={"依据分词规则切分"} example={"「我喜欢编程」→ [我, 喜欢, 编程]（教学切法）"}>
+Tokenizer 不保证每个 Token 恰好是一个词。常见 Token 是子词，也可能是字符或字节。
+</Step>
+<Step title={"查词表，得到 ID"} example={"[我, 喜欢, 编程] → [10, 25, 38]"}>
+把每个 Token 映射成唯一的整数。一个句子最终是一个整数数组。
+</Step>
+<Step title={"不需要收录所有完整单词"} example={"players → play + er + s（示意）"}>
+遇到不在词表中的完整单词，可以拆成更小单元。字节级 BPE 能通过字节组合覆盖任意有效 UTF-8 文本。
+</Step>
+</Steps>
+<LabSection id={"tokenizer"} />
+<Takeaway insight={"Tokenizer 的规则通常先于模型权重确定；Token ID 不是语义向量，只是索引。"} caution={"本页实验使用一个特意缩小的教学词表。未收录字符显示 <unk>，不等同于真实字节级 BPE。"} />

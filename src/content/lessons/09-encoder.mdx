@@ -1,0 +1,31 @@
+---
+id: "encoder"
+no: "09"
+eyebrow: "经典主架构"
+title: "Encoder：完整读懂输入句子"
+en: "Transformer Encoder"
+summary: "Encoder 使用无因果限制的 Self-Attention 汇聚源侧信息，再通过 Add & Norm、FFN、Add & Norm 得到每个源位置的上下文表示。"
+duration: "10 min"
+input: "源句的 n×d_model 向量"
+output: "H_enc，形状仍为 n×d_model"
+---
+
+<Question>一层 Encoder 内部到底走过哪些步骤？</Question>
+<Formula tex={String.raw`U=\operatorname{LN}(X+\operatorname{MHA}(X)),\quad H=\operatorname{LN}(U+\operatorname{FFN}(U))`} />
+<Io />
+<Steps>
+<Step title={"Embedding + 位置编码"} example={"「我 爱 你」→ X 的形状为 3×4"}>
+n 个源 Token 各取一个 d_model 维向量，并加入位置表示，形成输入矩阵 X。
+</Step>
+<Step title={"Self-Attention 汇聚其他词"} example={"3 个源位置 → 3×3 注意力矩阵"}>
+同一组 X 产生 Q、K、V。每个源 Query 可读取所有有效源位置，没有自回归的“禁止未来”限制。
+</Step>
+<Step title={"第一次 Add & Norm"} example={"U=LN(X+MHA(X))"}>
+MHA 的输出加上进入 MHA 之前的 X，然后逐 Token 做 LayerNorm。
+</Step>
+<Step title={"FFN 与第二次 Add & Norm"} example={"H_enc=LN(U+FFN(U))"}>
+各 Token 独立做非线性变换，再加回 U 并做归一化。
+</Step>
+</Steps>
+<LabSection id={"encoder"} />
+<Takeaway insight={"Encoder 的最终每一行仍对应一个输入 Token 位置，但已经融合了整句上下文。"} caution={"经典模型可以堆叠多层 Encoder；本教程的单层流程只是在解释其中一层。"} />

@@ -1,0 +1,31 @@
+---
+id: "training"
+no: "11"
+eyebrow: "从预测到学习"
+title: "Training：模型怎样知道自己错了"
+en: "Logits · Teacher Forcing · Cross-Entropy"
+summary: "训练时用正确目标前缀构造 Decoder 输入，再将隐藏状态投影成词表评分，经 Softmax 得到概率；用交叉熵衡量错误，利用梯度反向更新参数。"
+duration: "14 min"
+input: "Decoder 输出 + 正确目标 Token"
+output: "Loss 与模型参数梯度"
+---
+
+<Question>正确答案的预测概率为什么决定了 Loss？</Question>
+<Formula tex={String.raw`\ell=-\log p_{\mathrm{correct}},\qquad \frac{\partial\ell}{\partial z_j}=p_j-\mathbf1[j=y]`} />
+<Io />
+<Steps>
+<Step title={"Teacher Forcing：准备正确历史"} example={"输入 <bos> I → 正确预测 love"}>
+训练时已知目标句，把 {'<bos>'} I love you 作为 Decoder 输入，把 I love you {'<eos>'} 作为标签，二者错开一位。
+</Step>
+<Step title={"Logits → Softmax"} example={"[1,2,3] → [0.0900,0.2447,0.6652]"}>
+隐藏向量乘词表投影矩阵 W_vocab，得到各候选 Token 原始分数；Softmax 转成概率。
+</Step>
+<Step title={"Cross-Entropy：只看正确答案的概率"} example={"p_correct=0.7 → Loss≈0.3567"}>
+单个位置的负对数似然是 -ln P(正确 Token)。正确概率越高，Loss 越小。
+</Step>
+<Step title={"反向传播与梯度下降"} example={"θ_new=θ_old−学习率×梯度"}>
+先计算每个 Logit 的梯度 p−onehot(y)，再通过链式法则传回权重，优化器更新可学习参数。
+</Step>
+</Steps>
+<LabSection id={"training"} />
+<Takeaway insight={"Teacher Forcing 使用正确的历史 Token；推理则使用模型刚刚生成的 Token。两者不能混为一谈。"} caution={"本教程是教学用确定性算例，不会真正训练神经网络权重。"} />

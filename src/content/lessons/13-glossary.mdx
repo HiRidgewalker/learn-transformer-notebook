@@ -1,0 +1,31 @@
+---
+id: "glossary"
+no: "13"
+eyebrow: "随手速查"
+title: "Transformer 公式与术语速查"
+en: "Symbols & Mental Models"
+summary: "把容易混淆的词、矩阵形状和核心公式集中放在一页。迷路时回到这里，明确每个字母是从哪里来的。"
+duration: "5 min"
+input: "一道陌生公式"
+output: "明确符号、形状与用途"
+---
+
+<Question>Q、K、V、Logits、Loss 等概念怎样快速区分？</Question>
+<Formula tex={String.raw`\text{Token}\to\text{Embedding}\to\text{Attention}\to\text{FFN}\to\text{Logits}`} />
+<Io />
+<Steps>
+<Step title={"Token / ID / Embedding"} example={"「喜欢」→25→[0.5,0.1,0.2,0.3]"}>
+Token 是文本基本单元，ID 是词表索引，Embedding 是按这个索引查到的可训练向量。
+</Step>
+<Step title={"Q / K / V"} example={"Attention(Q,K,V) = softmax(QKᵀ/√dₖ)V"}>
+Q 用来查询，K 用来匹配，V 承载供汇聚的数值。QKᵀ 用来生成评分，不是直接输出 Token。
+</Step>
+<Step title={"Residual / Norm / FFN"} example={"LN(x+F(x))，FFN(x)=ReLU(xW₁+b₁)W₂+b₂"}>
+Residual 是加回原输入；LayerNorm 是逐 Token 特征归一化；FFN 是逐 Token 非线性特征处理。
+</Step>
+<Step title={"Logits / Probability / Loss"} example={"−ln(0.9)=0.105；−ln(0.1)=2.303"}>
+Logits 是未经归一化的评分；Softmax 得到概率；Loss 衡量正确答案的概率不足。
+</Step>
+</Steps>
+<LabSection id={"glossary"} />
+<Takeaway insight={"优先追踪“这个矩阵从哪个模块来、形状是什么、下一步拿它做什么”，比死记公式更可靠。"} caution={"本页是经典 Encoder–Decoder Transformer 的速查，不覆盖全部现代 LLM 架构变体。"} />

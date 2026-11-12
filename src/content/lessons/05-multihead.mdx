@@ -1,0 +1,31 @@
+---
+id: "multihead"
+no: "05"
+eyebrow: "注意力核心"
+title: "为什么一个注意力头不够"
+en: "Multi-Head Attention"
+summary: "多个注意力头分别学习不同的 Q、K、V 投影视角，再把各自的结果拼接，经输出投影合为一个向量。"
+duration: "9 min"
+input: "两个注意力头，各输出 2 维"
+output: "拼接为 4 维，再输出投影"
+---
+
+<Question>两个注意力头怎样变成一个最终结果？</Question>
+<Formula tex={String.raw`\operatorname{MHA}(X)=\operatorname{Concat}(head_1,\ldots,head_h)W_O`} />
+<Io />
+<Steps>
+<Step title={"每个头有自己的参数"} example={"head₁ 使用 W_Q¹/W_K¹/W_V¹；head₂ 使用另一组矩阵。"}>
+不同注意力头使用不同的投影矩阵，能够从不同的特征角度计算关系；同一头内的 Token 共享该头的矩阵。
+</Step>
+<Step title={"每个头独立做 Attention"} example={"head₁=[1.6,0.8]，head₂=[0.2,1.1]（示意）"}>
+每个头都经过 QK 点积、缩放、Softmax、V 加权求和。
+</Step>
+<Step title={"Concat 只是拼接"} example={"[1.6,0.8] ⊕ [0.2,1.1] = [1.6,0.8,0.2,1.1]"}>
+把两个二维结果首尾接起来，形成四维向量，不是相加。
+</Step>
+<Step title={"输出投影 W_O"} example={"(1×4)(4×4) = 1×4"}>
+拼接后的向量再乘一个可学习矩阵 W_O，融合不同头的信息并恢复 d_model 的维度。
+</Step>
+</Steps>
+<LabSection id={"multihead"} />
+<Takeaway insight={"多头增加的是并行“关系视角”，不是把一句话复制成多个 Token。"} caution={"这里的二维头仅用于可视化；真实模型的头数和维度由架构配置决定。"} />

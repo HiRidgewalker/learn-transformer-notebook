@@ -1,0 +1,31 @@
+---
+id: "ffn"
+no: "07"
+eyebrow: "编码器构件"
+title: "FFN：每个 Token 的独立加工厂"
+en: "Position-wise Feed-Forward Network"
+summary: "FFN 对每个 Token 使用同一套参数独立计算，先升维、经过非线性激活，再降回原维度。它不在不同 Token 之间直接交换信息。"
+duration: "11 min"
+input: "一个 Token 的 4 维向量"
+output: "新的 4 维向量"
+---
+
+<Question>为什么要把 4 维先变成 8 维，再变回 4 维？</Question>
+<Formula tex={String.raw`\operatorname{FFN}(x)=\operatorname{ReLU}(xW_1+b_1)W_2+b_2`} />
+<Io />
+<Steps>
+<Step title={"第一层：4→8"} example={"(1×4)(4×8) = 1×8"}>
+输入一行四个数，与 4×8 的 W₁ 相乘，再加八维偏置 b₁。得到一个 Token 的八个中间特征。
+</Step>
+<Step title={"ReLU：负数变为零"} example={"ReLU([-1,0.5,2]) = [0,0.5,2]"}>
+对八个数分别执行 max(0,x)。例如 -0.7→0，1.2→1.2。非线性让两层不能简单合并成一次矩阵乘法。
+</Step>
+<Step title={"第二层：8→4"} example={"(1×8)(8×4)=1×4"}>
+八维特征乘 8×4 的 W₂，加四维偏置 b₂，输出四维向量。
+</Step>
+<Step title={"各个 Token 各算各的"} example={"FFN(我)、FFN(爱)、FFN(你) 共享权重，不互相做点积。"}>
+每个 Token 都使用同一组 W₁、b₁、W₂、b₂，但输入不同，输出通常不同。
+</Step>
+</Steps>
+<LabSection id={"ffn"} />
+<Takeaway insight={"Attention 让 Token 之间汇聚信息；FFN 在单个位置上进行非线性特征变换。"} caution={"8 只是教学用扩展宽度；真实 Transformer 的 d_ff 往往比 d_model 大得多。"} />

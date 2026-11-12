@@ -1,0 +1,31 @@
+---
+id: "mask"
+no: "08"
+eyebrow: "解码器构件"
+title: "Mask：让模型不能偷看答案"
+en: "Causal Mask & Padding Mask"
+summary: "Mask 不删除 Token，而是在 Softmax 之前禁止一些 Q-K 匹配，使不允许关注的位置最终获得零注意力权重。"
+duration: "10 min"
+input: "评分 [1,2,3,4]，当前 Query 位置=2"
+output: "Mask 后 [1,2,3,-∞]"
+---
+
+<Question>为什么当前位置看不到“未来”的 Token？</Question>
+<Formula tex={String.raw`A=\operatorname{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}+M\right),\quad M_{ij}=\begin{cases}0&j\le i\\-\infty&j>i\end{cases}`} />
+<Io />
+<Steps>
+<Step title={"Causal Mask 规定可见范围"} example={"当前 i=2 → 可以看 0、1、2；不能看 3。"}>
+目标位置 i 只允许关注 j≤i 的位置。右上角未来位置被遮挡；这是自回归 Decoder Self-Attention 的关键。
+</Step>
+<Step title={"在 Softmax 之前加 Mask"} example={"[1,2,3,4]+[0,0,0,-∞]=[1,2,3,-∞]"}>
+允许关注加 0，不变；禁止关注加 -∞，对应指数变成 0。
+</Step>
+<Step title={"Softmax 给被遮挡位置 0 权重"} example={"Softmax([1,2,3,-∞])≈[0.0900,0.2447,0.6652,0]"}>
+e^(-∞)=0，因此该位置不参与 Value 的加权求和。
+</Step>
+<Step title={"Padding Mask 遮掉补齐位置"} example={"[我, 爱, <pad>] → 第 3 列不可关注"}>
+不同长度的句子补齐为相同张量时，{'<pad>'} 不属于实际文本。Padding Mask 通常将这些 Key 列标为不可见。
+</Step>
+</Steps>
+<LabSection id={"mask"} />
+<Takeaway insight={"Causal Mask 防止读取未来目标信息；Padding Mask 防止填充 Key 参与注意力。两者可以组合。"} caution={"如果一整行都被标成 -∞，普通 Softmax 将出现数值问题；实际实现要保证或特殊处理有效位置。"} />

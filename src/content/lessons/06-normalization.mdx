@@ -1,0 +1,31 @@
+---
+id: "normalization"
+no: "06"
+eyebrow: "编码器构件"
+title: "Add & Norm 为什么不能省"
+en: "Residual Connection & LayerNorm"
+summary: "残差连接把子层输入直接加回输出；LayerNorm 则对每个 Token 的特征维度做数值标准化，并允许可学习的缩放与偏移。"
+duration: "12 min"
+input: "X=[1,2,3,4]，F(X)=[0.1,-0.2,0.3,0]"
+output: "R=[1.1,1.8,3.3,4]"
+---
+
+<Question>为什么输出要再加上原始输入，并对数值归一化？</Question>
+<Formula tex={String.raw`Y=\operatorname{LN}(X+F(X)),\quad \operatorname{LN}(r)=\gamma\odot\frac{r-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta`} />
+<Io />
+<Steps>
+<Step title={"先 Add：走一条捷径"} example={"[1,2,3,4] + [0.1,-0.2,0.3,0] → [1.1,1.8,3.3,4]"}>
+Residual = X + F(X)。即使子层输出接近 0，输入仍可以通过这条捷径继续传递，并为反向传播提供更直接的梯度路径。
+</Step>
+<Step title={"计算该 Token 的均值"} example={"μ=(1.1+1.8+3.3+4)/4=2.55"}>
+把同一个 Token 的四个特征相加后除以 4。不是把句子中所有 Token 混在一起算。
+</Step>
+<Step title={"计算方差，再标准化"} example={"σ²=1.3325；标准化 ≈ [-1.256,-0.650,0.650,1.256]"}>
+每个数减均值、平方求平均得到方差，再除以 √(方差+ε)，避免数值尺度漂移。
+</Step>
+<Step title={"最后乘 γ，加 β"} example={"Y = γ ⊙ 标准化向量 + β"}>
+γ、β 是逐维可学习参数，允许模型重新调整标准化后的尺度和偏移。
+</Step>
+</Steps>
+<LabSection id={"normalization"} />
+<Takeaway insight={"原始 Transformer 使用 Post-LN：先 Add，再 Norm。现代一些模型则使用 Pre-LN。"} caution={"在 LN 的 γ、β 不等于 1 和 0 时，最终输出不一定仍然均值为 0、方差为 1。"} />

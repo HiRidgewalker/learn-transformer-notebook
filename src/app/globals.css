@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: "Google Sans", "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --radius-control: 0.75rem;
+  --radius-card: 1.5rem;
+  --shadow-panel: 0 14px 40px rgb(64 87 133 / 0.08);
+  --shadow-panel-dark: 0 25px 70px rgb(0 0 0 / 0.22);
+  --color-canvas: #f7f9fd;
+  --color-canvas-dark: #080d17;
+  --color-side: #ffffff;
+  --color-side-dark: #0c1421;
+  --color-panel: #ffffff;
+  --color-panel-dark: #101a2a;
+  --color-panel-2: #f3f6fc;
+  --color-panel-2-dark: #142134;
+  --color-panel-3: #e8eef8;
+  --color-panel-3-dark: #1a2940;
+  --color-ink: #19253b;
+  --color-ink-dark: #f0f5fe;
+  --color-muted: #60728c;
+  --color-muted-dark: #91a2bb;
+  --color-muted-2: #8390a4;
+  --color-muted-2-dark: #6f819b;
+  --color-line: #dae2ef;
+  --color-line-dark: #223148;
+  --color-subtle: #edf1f7;
+  --color-subtle-dark: #172439;
+  --color-mint: #148b7b;
+  --color-mint-dark: #58e2c3;
+  --color-mint-soft: #dbf4ef;
+  --color-mint-soft-dark: #123b3a;
+  --color-blue: #3276cf;
+  --color-blue-dark: #76aaff;
+  --color-purple: #8461c5;
+  --color-purple-dark: #b49bff;
+  --color-orange: #b86b26;
+  --color-orange-dark: #f4b473;
+  --color-hover: #f1f5fc;
+  --color-hover-dark: #1a2940;
+}
+
+@font-face {
+  font-family: "Google Sans";
+  src: url("/fonts/google-sans/GoogleSans-Variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Sans SC";
+  src: url("/fonts/noto-sans-sc/NotoSansSC-Variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}

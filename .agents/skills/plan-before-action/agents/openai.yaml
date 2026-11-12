@@ -1,0 +1,5 @@
+interface:
+  display_name: "plan-before-action"
+  short_description: "显式规划与确认，按任务状态实施、回写进度并支持中断续做"
+policy:
+  allow_implicit_invocation: false

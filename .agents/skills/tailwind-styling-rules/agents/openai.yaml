@@ -1,0 +1,9 @@
+interface:
+  display_name: "tailwind-styling-rules"
+  short_description: "Tailwind v4 用 CSS-first 配置与 @theme token，样式只走原子类并用 cn 合并条件类名"
+policy:
+  allow_implicit_invocation: true
+  products:
+    - "chatgpt"
+    - "codex"
+    - "api"

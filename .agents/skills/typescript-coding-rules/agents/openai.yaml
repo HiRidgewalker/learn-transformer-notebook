@@ -1,0 +1,9 @@
+interface:
+  display_name: "typescript-coding-rules"
+  short_description: "严格模式下的类型写法：禁 any 与断言绕过、类型优先推导、外部输入先校验再使用"
+policy:
+  allow_implicit_invocation: true
+  products:
+    - "chatgpt"
+    - "codex"
+    - "api"
