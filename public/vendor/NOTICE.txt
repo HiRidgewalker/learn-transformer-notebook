@@ -1,0 +1,4 @@
+Vendored runtime libraries:
+- React 16.0.1 and ReactDOM 16.0.1 (MIT License; copyright Facebook, Inc. and contributors).
+- MathJax 3 (Apache-2.0 License; copyright MathJax Consortium).
+They are included as JavaScript assets for self-contained local preview and contain no font files.
